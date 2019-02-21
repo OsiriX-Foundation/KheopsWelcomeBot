@@ -77,8 +77,8 @@ const server = http.createServer((request, res) => {
       },
     };
 
-    requestStack.paths.push('PUT', `/studies/1.2.3.4.5.6/users/${user}`);
-    requestStack.paths.push('PUT', `/albums/H4fb4/users/${user}`);
+    requestStack.push('PUT', `/studies/1.2.3.4.5.6/users/${user}`);
+    requestStack.push('PUT', `/albums/H4fb4/users/${user}`);
 
     requestStack.callRequests(() => {
       res.statusCode = 204;

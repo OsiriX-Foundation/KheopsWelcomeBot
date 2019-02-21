@@ -1,0 +1,10 @@
+{
+  "name": "welcome_bot",
+  "version": "1.0.0",
+  "description": "Welcome Bot",
+  "author": "Joël Spaltenstein <spalte@gmail.com>",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

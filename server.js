@@ -6,16 +6,21 @@ const fs = require('fs');
 const path = require('path');
 
 const hostname = '0.0.0.0';
-const port = 8085;
+const port = 8080;
 
-let filePath = path.join(__dirname, 'welcomebot_token');
-let welcomeBotToken = fs.readFileSync(filePath);
+const authorizationhost = 'kheopsauthorization';
+// const authorizationhost = 'localhost';
+const authorizationPath = '/authorization';
+
+// let filePath = path.join(__dirname, 'welcomebot_token');
+// let welcomeBotToken = fs.readFileSync(filePath);
+const welcomeBotToken = fs.readFileSync('/run/secrets/welcomebot_token');
 
 function putOptionsForPath(putPath) {
     return {
-        host: '127.0.0.1',
-        port: '8087',
-        path: putPath,
+        host: authorizationhost,
+        port: '8080',
+        path: `${authorizationPath}${putPath}`,
         method: 'PUT',
         headers: {
             'Authorization': `Bearer ${welcomeBotToken}`,
@@ -25,12 +30,14 @@ function putOptionsForPath(putPath) {
 
 const server = http.createServer((request, res) => {
     if (request.method == 'POST') {
-        let user = url.parse(request.url, true).query.user;
+        console.log(`request for ${request.url}`);
 
-        let requestStack = {
+        const user = url.parse(request.url, true).query.user;
+
+        const requestStack = {
             paths: [],
             callRequests (finished) {
-                let path = this.paths.pop()
+                const path = this.paths.pop()
                 if (path) {
                     http.request(putOptionsForPath(path)).once('response', () => {
                         this.callRequests(finished);
@@ -53,13 +60,6 @@ const server = http.createServer((request, res) => {
         res.end();
     }
 });
-
-const dummyServer = http.createServer((request, res) => {
-    console.log(request.url);
-    res.statusCode = 202;
-    res.end();        
-});
-dummyServer.listen(8087, hostname, () => {  });
 
 server.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);

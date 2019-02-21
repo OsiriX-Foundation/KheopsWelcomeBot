@@ -5,8 +5,8 @@ const url = require('url');
 const fs = require('fs');
 const path = require('path');
 
-const hostname = '127.0.0.1';
-const port = 8086;
+const hostname = '0.0.0.0';
+const port = 8085;
 
 let filePath = path.join(__dirname, 'welcomebot_token');
 let welcomeBotToken = fs.readFileSync(filePath);

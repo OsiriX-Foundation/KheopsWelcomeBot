@@ -1,3 +1,5 @@
+/* eslint no-console: ["error", { allow: ["info", "warn", "error"] }] */
+
 const http = require('http');
 const url = require('url');
 const fs = require('fs');
@@ -36,7 +38,7 @@ function optionsForPath(path, method, data) {
 
 const server = http.createServer((request, res) => {
   if (request.method === 'POST') {
-    console.log(`request for ${request.url}`);
+    console.info(`request for ${request.url}`);
 
     const { user } = url.parse(request.url, true).query;
 
@@ -89,5 +91,5 @@ const server = http.createServer((request, res) => {
 });
 
 server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+  console.info(`Server running at http://${hostname}:${port}/`);
 });

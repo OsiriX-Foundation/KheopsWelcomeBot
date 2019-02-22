@@ -66,14 +66,10 @@ const server = http.createServer((request, res) => {
         }
       },
 
-      push(method, path, sendData) {
+      push(method, path, sendData = null) {
         this.paths.push(path);
         this.methods.push(method);
-        if (sendData) {
-          this.data.push(sendData);
-        } else {
-          this.data.push(null);
-        }
+        this.data.push(sendData);
       },
     };
 

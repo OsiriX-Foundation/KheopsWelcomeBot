@@ -48,8 +48,8 @@ const server = http.createServer((request, res) => {
             }
         }
 
-        requestStack.paths.push(`/studies/1.2.3.4.5.6/users/${user}`);
-        requestStack.paths.push(`/albums/H4fb4/users/${user}`);
+        requestStack.paths.push(`/studies/2.16.840.1.113669.632.20.1211.10000314223/users/${user}`);
+        requestStack.paths.push(`/albums/l1nNRn3MX0/users/${user}`);
 
         requestStack.callRequests(() => {
             res.statusCode = 204;

@@ -12,7 +12,7 @@ const authorizationhost = 'kheopsauthorization';
 const authorizationPath = '/authorization';
 const authorizationPort = 8080;
 
-const welcomeBotToken = fs.readFileSync('/run/secrets/welcomebot_token').trim();
+const welcomeBotToken = fs.readFileSync('/run/secrets/welcomebot_token', 'utf8').trim();
 
 const optionsForPath = (path, method, data) => {
   const options = {
@@ -30,7 +30,7 @@ const optionsForPath = (path, method, data) => {
   }
 
   return options;
-}
+};
 
 const server = http.createServer((request, res) => {
   if (request.method === 'POST') {
@@ -86,8 +86,8 @@ const server = http.createServer((request, res) => {
       },
     };
 
-    requestStack.push('PUT', `/studies/1.2.3.4.5.6/users/${user}`);
-    requestStack.push('PUT', `/albums/H4fb4/users/${user}`);
+    requestStack.push('PUT', `/studies/2.16.840.1.113669.632.20.1211.10000314223/users/${user}`);
+    requestStack.push('PUT', `/albums/4Eo7acquUC/users/${user}`);
 
     requestStack.callRequests(() => {
       res.statusCode = 204;

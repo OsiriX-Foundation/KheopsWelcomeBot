@@ -18,7 +18,7 @@ const welcomeBotToken = fs.readFileSync('/run/secrets/welcomebot_token');
 
 console.log(`welcomebot token: ${welcomeBotToken}`);
 
-function putOptionsForPath(putPath) {
+let putOptionsForPath = (putPath) => {
     return {
         host: authorizationhost,
         port: '8080',
@@ -41,7 +41,9 @@ const server = http.createServer((request, res) => {
             callRequests (finished) {
                 const path = this.paths.pop()
                 if (path) {
-                    http.request(putOptionsForPath(path)).once('response', () => {
+                    let options = putOptionsForPath(path);
+                    console.log(`options: ${options}`);
+                    http.request(options).once('response', () => {
                         this.callRequests(finished);
                     }).end();
                 } else {

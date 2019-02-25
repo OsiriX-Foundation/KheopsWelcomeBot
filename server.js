@@ -46,14 +46,31 @@ const server = http.createServer((request, res) => {
       paths: [],
       methods: [],
       data: [],
+      callbacks: [],
 
       callRequests(finished) {
         const method = this.methods.pop();
         const path = this.paths.pop();
         const sendData = this.data.pop();
+        const callback = this.callbacks.pop();
+
         if (path) {
-          const sendRequest = http.request(optionsForPath(path, method, sendData)).once('response', () => {
-            this.callRequests(finished);
+          const sendRequest = http.request(optionsForPath(path, method, sendData), (response) => {
+            let data = '';
+
+            resp.on('data', (chunk) => {
+              data += chunk;
+            });
+
+            resp.on('end', () => {
+              if (callback) {
+                callback(JSON.parse(data));
+              }
+              this.callRequests(finished);
+            });
+    
+          }).on("error", (err) => {
+            console.log("Error: " + err.message);
           });
 
           if (sendData) {
@@ -66,10 +83,11 @@ const server = http.createServer((request, res) => {
         }
       },
 
-      push(method, path, sendData = null) {
+      push(method, path, sendData = null, callback = null) {
         this.paths.push(path);
-        this.methods.push(method);
+        this.methods.push(method);x
         this.data.push(sendData);
+        this.callbacks.push(callback);
       },
     };
 

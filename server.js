@@ -42,7 +42,7 @@ const server = http.createServer((request, res) => {
                 const path = this.paths.pop()
                 if (path) {
                     let options = putOptionsForPath(path);
-                    console.log(`options: ${options}`);
+                    console.log(`options: ${JSON.stringify(options)}`);
                     http.request(options).once('response', () => {
                         this.callRequests(finished);
                     }).end();

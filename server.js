@@ -4,21 +4,17 @@ const http = require('http');
 const url = require('url');
 const fs = require('fs');
 const querystring = require('querystring');
-// const fspath = require('path');
 
 const hostname = '0.0.0.0';
 const port = 8080;
 
 const authorizationhost = 'kheopsauthorization';
-// const authorizationhost = 'localhost';
 const authorizationPath = '/authorization';
 const authorizationPort = 8080;
 
-// let filePath = fspath.join(__dirname, 'welcomebot_token');
-// let welcomeBotToken = fs.readFileSync(filePath);
-const welcomeBotToken = fs.readFileSync('/run/secrets/welcomebot_token');
+const welcomeBotToken = fs.readFileSync('/run/secrets/welcomebot_token').trim();
 
-function optionsForPath(path, method, data) {
+const optionsForPath = (path, method, data) => {
   const options = {
     host: authorizationhost,
     port: authorizationPort,
@@ -58,19 +54,18 @@ const server = http.createServer((request, res) => {
           const sendRequest = http.request(optionsForPath(path, method, sendData), (response) => {
             let data = '';
 
-            resp.on('data', (chunk) => {
+            response.on('data', (chunk) => {
               data += chunk;
             });
 
-            resp.on('end', () => {
+            response.on('end', () => {
               if (callback) {
                 callback(JSON.parse(data));
               }
               this.callRequests(finished);
             });
-    
-          }).on("error", (err) => {
-            console.log("Error: " + err.message);
+          }).on('error', (err) => {
+            console.info(`Error: ${err.message}`);
           });
 
           if (sendData) {
@@ -85,7 +80,7 @@ const server = http.createServer((request, res) => {
 
       push(method, path, sendData = null, callback = null) {
         this.paths.push(path);
-        this.methods.push(method);x
+        this.methods.push(method);
         this.data.push(sendData);
         this.callbacks.push(callback);
       },
@@ -107,4 +102,3 @@ const server = http.createServer((request, res) => {
 server.listen(port, hostname, () => {
   console.info(`Server running at http://${hostname}:${port}/`);
 });
-

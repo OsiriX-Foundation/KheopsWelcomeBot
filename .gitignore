@@ -1,3 +1,4 @@
 .vscode
+.DS_Store
 welcomebot_token
 node_modules

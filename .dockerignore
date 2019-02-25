@@ -2,3 +2,7 @@ node_modules
 npm-debug.log
 .gitignore
 .vscode
+node_modules
+.eslintrc.js
+.DS_Store
+.git

@@ -39,8 +39,8 @@ const server = http.createServer((request, res) => {
     const { user } = url.parse(request.url, true).query;
 
     const requestStack = {
-      paths: [],
       methods: [],
+      paths: [],
       data: [],
       callbacks: [],
 
@@ -79,8 +79,8 @@ const server = http.createServer((request, res) => {
       },
 
       push(method, path, sendData = null, callback = null) {
-        this.paths.push(path);
         this.methods.push(method);
+        this.paths.push(path);
         this.data.push(sendData);
         this.callbacks.push(callback);
       },

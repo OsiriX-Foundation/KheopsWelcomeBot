@@ -14,7 +14,7 @@ const authorizationPath = '/authorization';
 
 // let filePath = path.join(__dirname, 'welcomebot_token');
 // let welcomeBotToken = fs.readFileSync(filePath);
-const welcomeBotToken = fs.readFileSync('/run/secrets/welcomebot_token').trim();
+const welcomeBotToken = fs.readFileSync('/run/secrets/welcomebot_token', 'utf8').trim();
 
 console.log(`welcomebot token: ${welcomeBotToken}`);
 

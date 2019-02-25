@@ -53,7 +53,7 @@ const server = http.createServer((request, res) => {
         }
 
         requestStack.paths.push(`/studies/2.16.840.1.113669.632.20.1211.10000314223/users/${user}`);
-        requestStack.paths.push(`/albums/gq07LonL3i/users/${user}`);
+        requestStack.paths.push(`/albums/4Eo7acquUC/users/${user}`);
 
         requestStack.callRequests(() => {
             res.statusCode = 204;

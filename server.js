@@ -89,7 +89,6 @@ const server = http.createServer((request, res) => {
       },
     };
 
-    let albumID = '';
 
     requestStack.push('GET', `/studies?album=${albumSharingSource}`, null, (qidoResponse) => {
       requestStack.push('POST', '/albums', {
@@ -102,19 +101,20 @@ const server = http.createServer((request, res) => {
         addSeries: true,
         writeComments: true,
       }, (responseData) => {
-        albumID = responseData.album_id;
-      });
-      requestStack.push('PUT', `/albums/${albumID}/users/${user}`);
-      requestStack.push('PUT', `/albums/${albumID}/users/${user}/admin`);
+        console.info(`created the new album: ${JSON.stringify(responseData)}`);
+        const albumID = responseData.album_id;
+        requestStack.push('PUT', `/albums/${albumID}/users/${user}`);
+        requestStack.push('PUT', `/albums/${albumID}/users/${user}/admin`);
 
-      qidoResponse.forEach((element) => {
-        const studyInstanceUID = element['0020000D'].Value[0];
-        requestStack.push('PUT', `/studies/${studyInstanceUID}/albums/${albumID}`, {
-          album: albumSharingSource,
+        qidoResponse.forEach((element) => {
+          const studyInstanceUID = element['0020000D'].Value[0];
+          requestStack.push('PUT', `/studies/${studyInstanceUID}/albums/${albumID}`, {
+            album: albumSharingSource,
+          });
         });
-      });
 
-      requestStack.push('DELETE', `/albums/${albumID}/users/welcomebot%40kheops.online`);
+        requestStack.push('DELETE', `/albums/${albumID}/users/welcomebot%40kheops.online`);
+      });
     });
 
     requestStack.push('GET', `/studies?album=${inboxSharingSource}`, null, (qidoResponse) => {

@@ -92,7 +92,7 @@ const server = http.createServer((request, res) => {
 
     requestStack.push('GET', `/studies?album=${albumSharingSource}`, null, (qidoResponse) => {
       requestStack.push('POST', '/albums', {
-        name: 'Album created Welcom Bot',
+        name: 'Welcome Album',
         description: 'This album was automatically created and shared with you by the Welcome Bot.',
         addUser: true,
         downloadSeries: true,

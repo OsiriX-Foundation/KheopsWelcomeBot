@@ -12,6 +12,9 @@ const authorizationhost = 'kheopsauthorization';
 const authorizationPath = '/authorization';
 const authorizationPort = 8080;
 
+const albumSharingSource = 'eDj87AdlKo';
+const inboxSharingSource = 'ARIFqZui24';
+
 const welcomeBotToken = fs.readFileSync('/run/secrets/welcomebot_token', 'utf8').trim();
 
 const optionsForPath = (path, method, data) => {
@@ -45,10 +48,10 @@ const server = http.createServer((request, res) => {
       callbacks: [],
 
       callRequests(finished) {
-        const method = this.methods.pop();
-        const path = this.paths.pop();
-        const sendData = this.data.pop();
-        const callback = this.callbacks.pop();
+        const method = this.methods.shift();
+        const path = this.paths.shift();
+        const sendData = this.data.shift();
+        const callback = this.callbacks.shift();
 
         if (path) {
           const sendRequest = http.request(optionsForPath(path, method, sendData), (response) => {
@@ -86,8 +89,43 @@ const server = http.createServer((request, res) => {
       },
     };
 
-    requestStack.push('PUT', `/studies/2.16.840.1.113669.632.20.1211.10000314223/users/${user}`);
-    requestStack.push('PUT', `/albums/4Eo7acquUC/users/${user}`);
+    let albumID = '';
+
+    requestStack.push('GET', `/studies?album=${albumSharingSource}`, null, (qidoResponse) => {
+      requestStack.push('POST', '/albums', {
+        name: 'Album created Welcom Bot',
+        description: 'This album was automatically created and shared with you by the Welcome Bot.',
+        addUser: true,
+        downloadSeries: true,
+        sendSeries: true,
+        deleteSeries: true,
+        addSeries: true,
+        writeComments: true,
+      }, (responseData) => {
+        albumID = responseData.album_id;
+      });
+      requestStack.push('PUT', `/albums/${albumID}/users/${user}`);
+      requestStack.push('PUT', `/albums/${albumID}/users/${user}/admin`);
+
+      qidoResponse.forEach((element) => {
+        const studyInstanceUID = element['0020000D'].Value[0];
+        requestStack.push('PUT', `/studies/${studyInstanceUID}/albums/${albumID}`, {
+          album: albumSharingSource,
+        });
+      });
+
+      requestStack.push('DELETE', `/albums/${albumID}/users/welcomebot%40kheops.online`);
+    });
+
+    requestStack.push('GET', `/studies?album=${inboxSharingSource}`, null, (qidoResponse) => {
+      qidoResponse.forEach((element) => {
+        const studyInstanceUID = element['0020000D'].Value[0];
+        requestStack.push('PUT', `/studies/${studyInstanceUID}/users/${user}`, {
+          album: inboxSharingSource,
+        });
+      });
+    });
+
 
     requestStack.callRequests(() => {
       res.statusCode = 204;

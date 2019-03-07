@@ -12,8 +12,8 @@ const authorizationhost = 'kheopsauthorization';
 const authorizationPath = '/authorization';
 const authorizationPort = 8080;
 
-const albumSharingSource = 'eDj87AdlKo';
-const inboxSharingSource = 'ARIFqZui24';
+const albumSharingSource = 'dTxCc6OJyG';
+const inboxSharingSource = 'XxDVxxK3Lm';
 
 const welcomeBotToken = fs.readFileSync('/run/secrets/welcomebot_token', 'utf8').trim();
 

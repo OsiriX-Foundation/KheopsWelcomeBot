@@ -113,9 +113,7 @@ const server = http.createServer((request, res) => {
 
         qidoResponse.forEach((element) => {
           const studyInstanceUID = element['0020000D'].Value[0];
-          requestStack.push('PUT', '*/*', `/studies/${studyInstanceUID}/albums/${albumID}`, {
-            album: albumSharingSource,
-          });
+          requestStack.push('PUT', '*/*', `/studies/${studyInstanceUID}/albums/${albumID}?album=${albumSharingSource}`);
         });
 
         requestStack.push('DELETE', '*/*', `/albums/${albumID}/users/welcomebot%40kheops.online`);
@@ -125,9 +123,7 @@ const server = http.createServer((request, res) => {
     requestStack.push('GET', 'application/dicom+json', `/studies?album=${inboxSharingSource}`, null, (qidoResponse) => {
       qidoResponse.forEach((element) => {
         const studyInstanceUID = element['0020000D'].Value[0];
-        requestStack.push('PUT', '*/*', `/studies/${studyInstanceUID}/users/${user}`, {
-          album: inboxSharingSource,
-        });
+        requestStack.push('PUT', '*/*', `/studies/${studyInstanceUID}/users/${user}?album=${inboxSharingSource}`);
       });
     });
 

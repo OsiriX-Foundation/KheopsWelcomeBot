@@ -8,11 +8,11 @@ const fs = require('fs');
 const hostname = '0.0.0.0';
 const port = 8080;
 
-const authorizationhost = 'kheopsauthorization';
-const authorizationPath = '/authorization';
-const authorizationPort = 8080;
+const authorizationhost = process.env.KHEOPS_AUTHORIZATION_HOST;
+const authorizationPath = process.env.KHEOPS_AUTHORIZATION_PATH;
+const authorizationPort = process.env.KHEOPS_AUTHORIZATION_PORT;
 
-const albumID = 'y7wTTbODmM';
+const albumID = process.env.STUDENT_SHARING_ALBUM_ID;
 
 const welcomeBotToken = fs.readFileSync('/run/secrets/welcomebot_token', 'utf8').trim();
 
@@ -26,10 +26,15 @@ const server = http.createServer((request, res) => {
   if (request.method === 'POST') {
     console.info(`request for ${request.url}`);
 
-    const { user } = url.parse(request.url, true).query;
+    const { email } = url.parse(request.url, true).query;
+    console.info(`Email is ${email}`);
 
-    if (user.endsWith('@etu.unige.ch')) {
-      authorizationAPI.put(`/albums/${albumID}/users/${user}`);
+    if (email.endsWith('@etu.unige.ch')) {
+      authorizationAPI.put(`/albums/${albumID}/users/${email}`).then((response) => {
+        console.info(response);
+      }).catch((error) => {
+        console.error(error);
+      });
     }
 
     res.statusCode = 204;

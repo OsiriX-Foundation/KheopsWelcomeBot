@@ -18,7 +18,6 @@ const welcomeBotToken = fs.readFileSync('/run/secrets/welcomebot_token', 'utf8')
 
 const authorizationAPI = axios.create({
   baseURL: `http://${authorizationhost}:${authorizationPort}${authorizationPath}`,
-  timeout: 1000,
   headers: { Authorization: `Bearer ${welcomeBotToken}` },
 });
 
@@ -31,7 +30,7 @@ const server = http.createServer((request, res) => {
 
     if (email.endsWith('@etu.unige.ch') || email.endsWith('@unige.ch')) {
       authorizationAPI.put(`/albums/${albumID}/users/${email}`).then((response) => {
-        console.info(`response code: ${response.statusCode}`);
+        console.info('successfully added user');
       }).catch((error) => {
         console.error(error);
       });

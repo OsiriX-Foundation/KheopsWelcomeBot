@@ -29,9 +29,9 @@ const server = http.createServer((request, res) => {
     const { email } = url.parse(request.url, true).query;
     console.info(`Email is ${email}`);
 
-    if (email.endsWith('@etu.unige.ch')) {
+    if (email.endsWith('@etu.unige.ch') || email.endsWith('@unige.ch')) {
       authorizationAPI.put(`/albums/${albumID}/users/${email}`).then((response) => {
-        console.info(response);
+        console.info(`response code: ${response.statusCode}`);
       }).catch((error) => {
         console.error(error);
       });
